@@ -12,7 +12,7 @@ import {PointStyle} from "../../utils/watchdrip/graph/pointStyle";
 
 let imgBg, digitalClock, digitalClockHour, digitalClockSeparator, secondsPointer, btDisconnected,
     normalHeartRateTextImg, normalStepsTextImg, normalDistTextImg, weekImg, dateDayImg, batteryCircleArc, paiCircleArc,
-    screenType;
+    screenType, watchBattery;
 let bgValTextWidget, bgValTextImgWidget, bgValTimeTextWidget, bgDeltaTextWidget, bgTrendImageWidget, bgStaleLine,
     phoneBattery, iob, treatment, bgStatusLow, bgStatusOk, bgStatusHight, progress;
 
@@ -77,7 +77,7 @@ WatchFace({
         if (screenType === hmSetting.screen_type.AOD) {
             imgBg = hmUI.createWidget(hmUI.widget.FILL_RECT, BG_FILL_RECT);
         } else {
-            imgBg = hmUI.createWidget(hmUI.widget.IMG, BG_IMG);
+           imgBg = hmUI.createWidget(hmUI.widget.IMG, BG_IMG);
         }
 
         let digitalTimeParam = styles.DIGITAL_TIME;
@@ -90,15 +90,20 @@ WatchFace({
 
         digitalClockSeparator = hmUI.createWidget(hmUI.widget.IMG, clockSeparatorParam);
 
-        normalHeartRateTextImg = hmUI.createWidget(hmUI.widget.TEXT_IMG, styles.NORMAL_HEART_RATE_TEXT_IMG);
+        //normalHeartRateTextImg = hmUI.createWidget(hmUI.widget.TEXT_IMG, styles.NORMAL_HEART_RATE_TEXT_IMG);
 
         normalStepsTextImg = hmUI.createWidget(hmUI.widget.TEXT_IMG, styles.NORMAL_STEPS_TEXT_IMG);
 
-        normalDistTextImg = hmUI.createWidget(hmUI.widget.TEXT_IMG, styles.NORMAL_DIST_TEXT_IMG);
+        //normalDistTextImg = hmUI.createWidget(hmUI.widget.TEXT_IMG, styles.NORMAL_DIST_TEXT_IMG);
 
         weekImg = hmUI.createWidget(hmUI.widget.IMG_WEEK, styles.WEEK_DAYS);
 
+        
+
         dateDayImg = hmUI.createWidget(hmUI.widget.IMG_DATE, styles.DAYS_TEXT_IMG);
+
+        watchBattery = hmUI.createWidget(hmUI.widget.TEXT_IMG, styles.WATCH_BATTERY_IMG);
+        weatherCurrent = hmUI.createWidget(hmUI.widget.TEXT_IMG, styles.WEATHER_IMG);
 
         btDisconnected = hmUI.createWidget(hmUI.widget.IMG_STATUS, styles.IMG_STATUS_BT_DISCONNECTED);
         batterySensor = hmSensor.createSensor(hmSensor.id.BATTERY);
@@ -110,7 +115,7 @@ WatchFace({
             batterySensor.addEventListener(hmSensor.event.CHANGE, scale_call);
             paiSensor.addEventListener(hmSensor.event.CHANGE, scale_call);
 
-            secondsPointer = hmUI.createWidget(hmUI.widget.TIME_POINTER, styles.ANALOG_TIME_SECONDS);
+            //secondsPointer = hmUI.createWidget(hmUI.widget.TIME_POINTER, styles.ANALOG_TIME_SECONDS);
         }
 
         if (screenType !== hmSetting.screen_type.AOD) {
@@ -132,6 +137,7 @@ WatchFace({
         //bgStaleLine = hmUI.createWidget(hmUI.widget.FILL_RECT, BG_STALE_RECT);
         bgStaleLine = hmUI.createWidget(hmUI.widget.IMG, styles.BG_STALE_IMG);
         phoneBattery = hmUI.createWidget(hmUI.widget.TEXT, styles.PHONE_BATTERY_TEXT);
+       
         iob = hmUI.createWidget(hmUI.widget.TEXT, styles.IOB_TEXT);
         treatment = hmUI.createWidget(hmUI.widget.TEXT, styles.TREATMENT_TEXT);
         bgStatusLow = hmUI.createWidget(hmUI.widget.IMG, styles.BG_STATUS_LOW_IMG);
@@ -188,6 +194,7 @@ WatchFace({
         phoneBattery.setProperty(hmUI.prop.MORE, {
             text: watchdripData.getStatus().getBatVal()
         });
+        
         let treatmentObj = watchdripData.getTreatment();
         iob.setProperty(hmUI.prop.MORE, {
             text: treatmentObj.getPredictIOB() + treatmentObj.getPredictBWP()
@@ -243,7 +250,7 @@ WatchFace({
             watchdrip.setUpdateTimesWidgetCallback(this.updateTimesWidget);
             watchdrip.setOnUpdateStartCallback(this.updateStart);
             watchdrip.setOnUpdateFinishCallback(this.updateFinish);
-
+            this.initView();
             //graph configuration
             let lineStyles = {};
             const POINT_SIZE = GRAPH_SETTINGS.point_size
@@ -257,9 +264,10 @@ WatchFace({
             lineStyles['lineHigh'] = new PointStyle("", LINE_SIZE);
             lineStyles['treatment'] = new PointStyle(TREATMENT_POINT_SIZE, TREATMENT_POINT_SIZE);
 
-          //  watchdrip.createGraph(GRAPH_SETTINGS.x,GRAPH_SETTINGS.y,GRAPH_SETTINGS.w,GRAPH_SETTINGS.h, lineStyles);// uncomment to add graph
+          // watchdrip.createGraph(GRAPH_SETTINGS.x,GRAPH_SETTINGS.y,GRAPH_SETTINGS.w,GRAPH_SETTINGS.h, lineStyles);// uncomment to add graph
 
             watchdrip.start();
+            
         }
         catch (e) {
             console.log('LifeCycle Error', e)
